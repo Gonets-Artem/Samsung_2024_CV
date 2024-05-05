@@ -18,9 +18,8 @@
 ## Данные 
 
 В рамках данной работы было использовано 2 датасета:
-- Human segmentation dataset https://www.kaggle.com/datasets/mantasu/glasses-segmentation-synthetic-dataset 
-- Glasses segmentation synthetic dataset https://www.kaggle.com/code/mantasu/eyeglasses-classifier 
-
+- Human segmentation dataset https://www.kaggle.com/datasets/tapakah68/supervisely-filtered-segmentation-person-dataset 
+- Glasses segmentation synthetic dataset https://www.kaggle.com/datasets/mantasu/glasses-segmentation-synthetic-dataset  
 
 ### 1 Human segmentation dataset 
 
