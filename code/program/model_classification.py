@@ -16,7 +16,7 @@ class ModelClassification:
         self.model.eval()
 
     def set_size(self, width, height):
-        self.size = width if width < height else height
+        self.size = 380 # width if width < height else height
     
     def predict(self, start_image):
         val_transforms = transforms.Compose([

@@ -26,17 +26,22 @@ class VideoEditor:
             if (not ret) or (cv2.waitKey(1) & 0xFF == ord('q')):
                 break
 
-            pred_people = self.model_segm_people.predict(frame)
-            pred_glasses = self.model_segm_glasses.predict(frame)
+            pred_people = self.model_segm_people.predict(frame, size_display=(self.height,self.width))
+            pred_glasses = self.model_segm_glasses.predict(frame, size_display=(self.height,self.width))
             pred_black = self.model_class_glasses.predict(frame)
 
             count_glasses = np.count_nonzero(pred_glasses==0)
             count_general = np.count_nonzero(np.multiply(pred_people==0, pred_glasses==0)==1)
             iou = 0 if count_glasses == 0 else count_general/count_glasses
 
-            print("\niou: {:.2f}".format(iou), "pred: {:.3f}".format(pred_black), sep='\t', end='')
+            print("\niou: {:.2f}".format(iou), "pred: {:.3f}".format(pred_black), count_glasses, count_general, sep='\t', end='')
             line = torch.tensor(pred_people).unsqueeze(0)
-            if pred_black <= 0.5 and iou >= 0.85:
+            # line = torch.tensor(pred_glasses).unsqueeze(0)
+            # frame = torch.mul(torch.tensor(frame).permute(2,0,1), 
+            #                            torch.cat([line, line, line], dim=0)
+            #                          ).permute(1,2,0).numpy().astype(np.uint8)
+
+            if pred_black < 0.5 and iou > 0.5:
                 if self.state == False and self.is_g < 2:
                     self.is_g += 1
                 elif self.state == False and self.is_g >= 2:
