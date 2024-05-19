@@ -34,7 +34,7 @@ class VideoEditor:
             count_general = np.count_nonzero(np.multiply(pred_people==0, pred_glasses==0)==1)
             iou = 0 if count_glasses == 0 else count_general/count_glasses
 
-            print("\niou: {:.2f}".format(iou), "pred: {:.3f}".format(pred_black), count_glasses, count_general, sep='\t', end='')
+            print("\niou: {:.2f}".format(iou), "pred: {:.3f}".format(pred_black), sep='\t', end='')
             line = torch.tensor(pred_people).unsqueeze(0)
             # line = torch.tensor(pred_glasses).unsqueeze(0)
             # frame = torch.mul(torch.tensor(frame).permute(2,0,1), 
@@ -42,9 +42,9 @@ class VideoEditor:
             #                          ).permute(1,2,0).numpy().astype(np.uint8)
 
             if pred_black < 0.5 and iou > 0.5:
-                if self.state == False and self.is_g < 2:
+                if self.state == False and self.is_g < 3:
                     self.is_g += 1
-                elif self.state == False and self.is_g >= 2:
+                elif self.state == False and self.is_g >= 3:
                     self.is_g, self.state = 0, True
                     print('\tOn', end='')
                     frame = torch.mul(torch.tensor(frame).permute(2,0,1), 
@@ -56,12 +56,12 @@ class VideoEditor:
                                       torch.cat([line, line, line], dim=0)
                                     ).permute(1,2,0).numpy().astype(np.uint8)
             else:
-                if self.state == True and self.no_g < 3:
+                if self.state == True and self.no_g < 5:
                     self.no_g += 1
                     frame = torch.mul(torch.tensor(frame).permute(2,0,1), 
                                       torch.cat([line, line, line], dim=0)
                                     ).permute(1,2,0).numpy().astype(np.uint8)
-                elif self.state == True and self.no_g >= 3:
+                elif self.state == True and self.no_g >= 5:
                     self.no_g, self.state = 0, False
                     print('\tOff', end='')
                 else:
@@ -78,3 +78,4 @@ if __name__ == '__main__':
     file_class_glasses = f'{root_path}classification_glasses'
     obj = VideoEditor(file_segm_people, file_segm_glasses, file_class_glasses)
     obj.run()
+
